@@ -14,8 +14,10 @@ import os
 
 import streamlit as st
 
+from src.chunk.chunker import TextChunker
 from src.config import CORPUS, VECTOR_DB_DIR
 from src.embed.embedder import ChunkEmbedder
+from src.load.scraper import FundPageScraper
 from src.retrieve.rag import RAGAssistant, MistralAnswerGenerator, UnavailableAnswerGenerator
 from src.retrieve.retriever import Retriever
 from src.vector_store.chroma_store import ChromaVectorStore
@@ -68,6 +70,7 @@ with st.sidebar:
 
 @st.cache_resource(show_spinner="Loading corpus index…")
 def build_assistant() -> RAGAssistant:
+    ensure_indexed()
     embedder = ChunkEmbedder()
     store = ChromaVectorStore()
     retriever = Retriever(embedder, store)
@@ -78,6 +81,17 @@ def build_assistant() -> RAGAssistant:
         else UnavailableAnswerGenerator()
     )
     return RAGAssistant(retriever=retriever, generator=generator)
+
+
+def ensure_indexed() -> None:
+    store = ChromaVectorStore()
+    if store.count() > 0:
+        return
+    documents = FundPageScraper(CORPUS).scrape_all()
+    payloads = [{**document.model_dump(), "text": document.text} for document in documents]
+    chunks = TextChunker().chunk_all(payloads)
+    vectors = ChunkEmbedder().embed_texts([chunk.chunk_text for chunk in chunks])
+    store.index(chunks, vectors)
 
 
 api_key_present = bool(os.getenv("MISTRAL_API_KEY", "").strip())
