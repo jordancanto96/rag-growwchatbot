@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# Secrets / config
+.env
+.env.local
+
+# Data artifacts (regenerable via pipeline)
+data/vector_db/
+data/embeddings/
+data/chunks/*.json
+data/raw/*.html
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+# Boot logs (noise)
+.streamlit_boot.log
+.streamlit_boot_err.log
+

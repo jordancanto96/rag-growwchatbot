@@ -1,0 +1,30 @@
+# Data loading (Phase 1)
+requests==2.32.3
+beautifulsoup4==4.13.3
+trafilatura==2.0.0
+
+# Chunking (Phase 2)
+# Uses langchain text splitters for recursive chunking with overlap
+langchain-text-splitters==0.3.6
+
+# Embedding (Phase 3)
+# sentence-transformers/all-MiniLM-L6-v2 (free, lightweight, 384-d)
+sentence-transformers==5.0.0
+
+# Vector store (Phase 4)
+# chroma-hnswlib needs a prebuilt win_amd64 wheel on Windows (no MSVC build tools required at install time)
+chromadb==1.5.9
+chroma-hnswlib==0.7.5
+
+# Retrieval / LLM (Phase 5)
+mistralai==1.5.2
+
+# UI (Streamlit)
+streamlit==1.45.1
+
+# Config / utilities
+python-dotenv==1.1.0
+pydantic==2.10.6
+
+# Testing (Phase 6)
+pytest==8.3.5
